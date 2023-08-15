@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const Company = React.lazy(() => import('./views/pages/company/Company'))
+const CompanyDetail = React.lazy(() => import('./views/pages/company/CompanyDetail'))
 
 // Base
 // const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -10,7 +10,7 @@ const Company = React.lazy(() => import('./views/pages/company/Company'))
 const routes = [
   { path: '/dashboard', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/company', name: 'Company', element: Company },
+  { path: '/company/:id', name: 'CompanyDetail', element: CompanyDetail },
   // { path: '/base/accordion', name: 'Accordion', element: Accordion },
   // { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
 ]

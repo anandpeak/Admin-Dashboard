@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import {
   CButton,
   CButtonGroup,
@@ -9,36 +8,32 @@ import {
   CCol,
   CProgress,
   CRow,
-  CTable,
-  CTableBody,
-  CTableHead,
-  CTableDataCell,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 import { getStyle } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
-import { cilUser, cilUserFemale, cilWc } from '@coreui/icons'
 
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import Company from '../pages/company/Company'
+import { gql, useQuery } from '@apollo/client'
+
+const GENDER_AND_MAJOR_LEVELS_QUERY = gql`
+  query {
+    distinctGendersAndMajorLevels {
+      genders {
+        gender
+        count
+      }
+      majorLevels {
+        majorLevel
+        count
+      }
+    }
+  }
+`
 
 const Dashboard = () => {
-  const month = [
-    {
-      1: 'January',
-      2: 'February',
-      3: 'March',
-      4: 'April',
-      5: 'May',
-      6: 'June',
-      7: 'July',
-    },
-  ]
-
-  const [time, setTime] = useState(month)
-
   const progressGroupExample1 = [
     { title: 'Даваа', value1: 34, value2: 78 },
     { title: 'Мягмар', value1: 56, value2: 94 },
@@ -49,12 +44,6 @@ const Dashboard = () => {
     { title: 'Ням', value1: 9, value2: 69 },
   ]
 
-  const progressGroupExample2 = [
-    { title: 'Male', icon: cilUser, value: 53 },
-    { title: 'Female', icon: cilUserFemale, value: 43 },
-    { title: 'Other', icon: cilWc, value: 50 },
-  ]
-
   const progressGroupExample3 = [
     { title: 'Дээд удирдлага', percent: 56, value: '191,235' },
     { title: 'Дунд шатны удирдлага', percent: 15, value: '51,223' },
@@ -62,14 +51,15 @@ const Dashboard = () => {
     { title: 'Оюутан', percent: 8, value: '27,319' },
   ]
 
-  const tableExample = [
-    {
-      user: 'Coca Cola',
-      played: '50',
-      normal: '40',
-      null: '10',
-    },
-  ]
+  const { loading, error, data } = useQuery(GENDER_AND_MAJOR_LEVELS_QUERY)
+
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error: {error.message}</p>
+
+  const genders = data.distinctGendersAndMajorLevels.genders
+  const majorLevels = data.distinctGendersAndMajorLevels.majorLevels
+  console.log('majorlevel = ', majorLevels)
+  const totalCount = genders.reduce((total, gender) => total + gender.count, 0)
 
   return (
     <>
@@ -222,18 +212,25 @@ const Dashboard = () => {
 
                   <hr className="mt-0" />
 
-                  {progressGroupExample2.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">{item.value}%</span>
+                  {genders.map((item, index) => {
+                    const percent = (item.count / totalCount) * 100
+                    return (
+                      <div className="progress-group" key={index}>
+                        <div className="progress-group-header">
+                          <span>{item.gender}</span>
+                          <span className="ms-auto fw-semibold">
+                            {item.count}{' '}
+                            <span className="text-medium-emphasis small">
+                              ({percent.toFixed(2)}%)
+                            </span>
+                          </span>
+                        </div>
+                        <div className="progress-group-bars">
+                          <CProgress thin color="warning" value={percent} />
+                        </div>
                       </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="warning" value={item.value} />
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
 
                   <div className="mb-5"></div>
 
@@ -256,42 +253,7 @@ const Dashboard = () => {
 
               <br />
 
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell>Ашиглаж буй Компани</CTableHeaderCell>
-                    <CTableHeaderCell>Тоглосон тоо</CTableHeaderCell>
-                    <CTableHeaderCell>Хариу нь гарсан</CTableHeaderCell>
-                    <CTableHeaderCell>Хариу нь гараагүй</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell>
-                        <Link to="/company">
-                          <div>{item.user}</div>
-                        </Link>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <strong>
-                          <div>{item.played}</div>
-                        </strong>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.normal}</strong>
-                          </div>
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <strong>{item.null}</strong>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
+              <Company />
             </CCardBody>
           </CCard>
         </CCol>
