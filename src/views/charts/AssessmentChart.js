@@ -80,7 +80,7 @@ export const AsssesmentChart = () => {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             dateFormat="yyyy-MM-dd"
-            className="date-picker-input border rounded ps-2"
+            className="date-picker-input shadow-sm border rounded ps-2"
           />
         </div>
         <div style={{ marginBottom: '20px' }}>
@@ -89,7 +89,7 @@ export const AsssesmentChart = () => {
             selected={endDate}
             onChange={(date) => setEndDate(date)}
             dateFormat="yyyy-MM-dd"
-            className="date-picker-input border rounded ps-2"
+            className="date-picker-input shadow-sm border rounded ps-2"
           />
         </div>
       </div>

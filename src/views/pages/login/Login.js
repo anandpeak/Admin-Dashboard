@@ -21,6 +21,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import { useForm } from 'src/utility/Hooks'
 import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from 'src/apollo/useQuery'
+import { HashLoader } from 'react-spinners'
 
 const Login = (props) => {
   const navigate = useNavigate()
@@ -48,7 +49,14 @@ const Login = (props) => {
     variables: { username: values.username, password: values.password },
   })
 
-  if (loading) return <div>Loading...</div>
+  if (loading)
+    return (
+      <div>
+        <div className="min-h-screen flex items-center justify-center">
+          <HashLoader color="#f59a8c" size={100} />
+        </div>
+      </div>
+    )
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">

@@ -5,9 +5,10 @@ import Company from './views/pages/company/Company'
 import CompanyDetail from './views/pages/company/CompanyDetail'
 import { ProtectedRoute } from './utility/ProtectedRoute'
 import { AuthContext } from './context/AuthContext'
+import { HashLoader } from 'react-spinners'
 const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
+  <div className="min-h-screen flex items-center justify-center">
+    <HashLoader color="#f59a8c" size={100} />
   </div>
 )
 

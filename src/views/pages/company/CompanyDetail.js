@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { useQuery } from '@apollo/client'
 import { COMPANY_DETAIL_QUERY } from 'src/apollo/useQuery'
+import { HashLoader } from 'react-spinners'
 
 const CompanyDetail = () => {
   const { id } = useParams()
@@ -15,7 +16,12 @@ const CompanyDetail = () => {
     variables: { companyId: id },
   })
 
-  if (loading) return <p>Loading...</p>
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <HashLoader color="#f59a8c" size={100} />
+      </div>
+    )
   if (error) return <p>Error: {error.message}</p>
 
   // Items

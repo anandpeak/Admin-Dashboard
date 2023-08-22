@@ -5,6 +5,7 @@ import Company from '../pages/company/Company'
 import { useQuery } from '@apollo/client'
 import { AsssesmentChart } from '../charts/AssessmentChart'
 import { GENDER_AND_MAJOR_LEVELS_QUERY } from '../../apollo/useQuery'
+import { HashLoader } from 'react-spinners'
 
 const Dashboard = () => {
   const progressGroupExample3 = [
@@ -15,7 +16,12 @@ const Dashboard = () => {
   ]
   const { loading, error, data } = useQuery(GENDER_AND_MAJOR_LEVELS_QUERY)
 
-  if (loading) return <p>Loading...</p>
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <HashLoader color="#f59a8c" size={100} />
+      </div>
+    )
   if (error) return <p>Error: {error.message}</p>
 
   const genders = data.distinctGendersAndMajorLevels.genders

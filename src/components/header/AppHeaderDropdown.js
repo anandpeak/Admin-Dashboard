@@ -9,12 +9,16 @@ import {
 import { cilLockLocked } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { AuthContext } from 'src/context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const AppHeaderDropdown = () => {
   const { logout } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     logout()
+    localStorage.removeItem('token')
+    navigate('/login')
   }
   return (
     <CDropdown variant="nav-item">
