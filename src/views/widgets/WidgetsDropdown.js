@@ -1,17 +1,5 @@
 import React from 'react'
-import {
-  CRow,
-  CCol,
-  CDropdown,
-  CDropdownMenu,
-  CDropdownItem,
-  CDropdownToggle,
-  CWidgetStatsA,
-} from '@coreui/react'
-import { getStyle } from '@coreui/utils'
-import { CChartBar, CChartLine } from '@coreui/react-chartjs'
-import CIcon from '@coreui/icons-react'
-import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
+import { CRow, CCol, CWidgetStatsA } from '@coreui/react'
 import { gql, useQuery } from '@apollo/client'
 
 const GET_PLAYER_COUNT = gql`
@@ -70,7 +58,7 @@ const WidgetsDropdown = () => {
           className="mb-4 py-4"
           color="danger"
           value={<div className="my-4">{nullPlayerCount}</div>}
-          title="Хариу нь гараагүй хүмүүсийн тоо"
+          title="Хариу гараагүй хүмүүсийн тоо"
         />
       </CCol>
     </CRow>

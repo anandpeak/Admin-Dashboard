@@ -1,78 +1,49 @@
 import { CCard, CCardBody, CCardHeader } from '@coreui/react'
 import React, { useState } from 'react'
-
-const data = [
-  {
-    first: 'Tseren',
-    last: 'Usuhuu',
-    result: 'failed',
-    date: '2121.12.18',
-    profession: 'Top management',
-    index: 1,
-  },
-  {
-    first: 'Bataa',
-    last: 'Amaraa',
-    result: 'success',
-    date: '2019.03.12',
-    profession: 'Middle management',
-    index: 2,
-  },
-  {
-    first: 'dorjoo',
-    last: 'Hasar',
-    result: 'failed',
-    date: '2020.08.02',
-    profession: 'Employee',
-    index: 3,
-  },
-  {
-    first: 'bilguun',
-    last: 'Murun',
-    result: 'success',
-    date: '2021.05.28',
-    profession: 'student',
-    index: 4,
-  },
-  {
-    first: 'Nergui',
-    last: 'Dorj',
-    result: 'failed',
-    date: '2020.08.03',
-    profession: 'student',
-    index: 5,
-  },
-  {
-    first: 'Batsuh',
-    last: 'Dagva',
-    result: 'failed',
-    date: '2020.08.04',
-    profession: 'Middle management',
-    index: 6,
-  },
-]
+import { useParams } from 'react-router-dom'
+import { format } from 'date-fns'
+import { useQuery } from '@apollo/client'
+import { COMPANY_DETAIL_QUERY } from 'src/apollo/useQuery'
 
 const CompanyDetail = () => {
+  const { id } = useParams()
   const [filter, setFilter] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10 // Number of items per page
 
-  const filteredData = data.filter((item) => {
-    if (!filter) return true
-
-    const lowercaseFilter = filter.toLowerCase()
-    const { first, last, date, profession } = item
-
-    return (
-      first.toLowerCase().includes(lowercaseFilter) ||
-      last.toLowerCase().includes(lowercaseFilter) ||
-      profession.toLowerCase().includes(lowercaseFilter) ||
-      date.startsWith(filter)
-    )
+  const { loading, error, data } = useQuery(COMPANY_DETAIL_QUERY, {
+    variables: { companyId: id },
   })
 
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error: {error.message}</p>
+
+  // Items
+  const company = data.CompanyDetail
+
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const totalPages = Math.ceil(company.Players.length / itemsPerPage)
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1)
+
+  // Filter players based on the filter input value
+  const filteredPlayers = company.Players.filter(
+    (player) =>
+      player.Name.toLowerCase().includes(filter.toLowerCase()) ||
+      player.lastName.toLowerCase().includes(filter.toLowerCase()) ||
+      player.majorLevel.toLowerCase().includes(filter.toLowerCase()),
+  )
+  const currentItems = filteredPlayers.slice(indexOfFirstItem, indexOfLastItem)
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+
   return (
-    <div>
+    <div className="container mt-5">
       <CCard>
-        <CCardHeader>Company Name</CCardHeader>
+        <CCardHeader>
+          <div className="fs-2 fw-bolder">{company.CompanyName}</div>
+        </CCardHeader>
         <CCardBody>
           <div className="mb-3">
             <input
@@ -88,31 +59,48 @@ const CompanyDetail = () => {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
+                  <th scope="col">Firstname</th>
+                  <th scope="col">Lastname</th>
                   <th scope="col">Profession</th>
                   <th scope="col">Result</th>
                   <th scope="col">Date</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((item, index) => {
-                  const textClassName = item.result === 'failed' ? 'text-danger' : 'text-success'
+                {currentItems.map((player, index) => {
+                  const textClassName = player.completed === 'true' ? 'text-success' : 'text-danger'
+                  const createdDate = player.createdDate ? new Date(player.createdDate) : null
 
                   return (
                     <tr key={index}>
-                      <th scope="row">{item.index}</th>
-                      <td>{item.first}</td>
-                      <td>{item.last}</td>
-                      <td>{item.profession}</td>
-                      <td className={textClassName}>{item.result}</td>
-                      <td>{item.date}</td>
+                      <th scope="row">{index + 1}</th>
+                      <td>{player.Name || 'N/A'}</td>
+                      <td>{player.lastName || 'N/A'}</td>
+                      <td>{player.majorLevel || 'N/A'}</td>
+                      <td className={textClassName}>
+                        {player.completed === 'true' ? 'Completed' : 'Failed'}
+                      </td>
+                      <td>{createdDate ? format(createdDate, 'yyyy-MM-dd HH:mm:ss') : 'N/A'}</td>
                     </tr>
                   )
                 })}
               </tbody>
             </table>
           </div>
+          <nav className="mt-3 d-flex justify-content-center">
+            <ul className="pagination">
+              {pageNumbers.map((pageNumber) => (
+                <li
+                  key={pageNumber}
+                  className={`page-item${currentPage === pageNumber ? ' active' : ''}`}
+                >
+                  <button className="page-link" onClick={() => paginate(pageNumber)}>
+                    {pageNumber}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </CCardBody>
       </CCard>
     </div>
