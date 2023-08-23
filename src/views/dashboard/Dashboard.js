@@ -8,12 +8,6 @@ import { GENDER_AND_MAJOR_LEVELS_QUERY } from '../../apollo/useQuery'
 import { HashLoader } from 'react-spinners'
 
 const Dashboard = () => {
-  const progressGroupExample3 = [
-    { title: 'Дээд удирдлага', percent: 0, value: '' },
-    { title: 'Дунд шатны удирдлага', percent: 0, value: '' },
-    { title: 'Ажилтан', percent: 0, value: '' },
-    { title: 'Оюутан', percent: 0, value: '' },
-  ]
   const { loading, error, data } = useQuery(GENDER_AND_MAJOR_LEVELS_QUERY)
 
   if (loading)
@@ -26,7 +20,6 @@ const Dashboard = () => {
 
   const genders = data.distinctGendersAndMajorLevels.genders
   const majorLevels = data.distinctGendersAndMajorLevels.majorLevels
-  console.log('majorlevel = ', majorLevels)
   const totalCount = genders.reduce((total, gender) => total + gender.count, 0)
 
   return (
@@ -37,7 +30,7 @@ const Dashboard = () => {
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                Жил, Сар, Өдөр тутмын өсөлтийг харуулсан үзүүлэлт
+                График
               </h4>
               <div className="small text-medium-emphasis mt-3">Өдрөө сонгоно уу</div>
             </CCol>
@@ -54,40 +47,49 @@ const Dashboard = () => {
             <CCardBody>
               <CRow>
                 <CCol xs={12} md={6} xl={6}>
-                  {progressGroupExample3.map((item, index) => (
-                    <div className="progress-group" key={index}>
-                      <div className="progress-group-header">
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">
-                          {item.value}{' '}
-                          <span className="text-medium-emphasis small">({item.percent}%)</span>
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="success" value={item.percent} />
-                      </div>
-                    </div>
-                  ))}
+                  {majorLevels.map((item, index) => {
+                    const percent = (item.count / totalCount) * 100
+                    return (
+                      item.majorLevel !== '' && (
+                        <div className="progress-group" key={index}>
+                          <div className="progress-group-header">
+                            <span>{item.majorLevel}</span>
+                            <span className="ms-auto fw-semibold">
+                              {item.count}
+                              <span className="text-medium-emphasis small">
+                                ({percent.toFixed(2)}%)
+                              </span>
+                            </span>
+                          </div>
+                          <div className="progress-group-bars">
+                            <CProgress thin color="success" value={percent} />
+                          </div>
+                        </div>
+                      )
+                    )
+                  })}
                 </CCol>
 
                 <CCol xs={12} md={6} xl={6}>
                   {genders.map((item, index) => {
                     const percent = (item.count / totalCount) * 100
                     return (
-                      <div className="progress-group" key={index}>
-                        <div className="progress-group-header">
-                          <span>{item.gender}</span>
-                          <span className="ms-auto fw-semibold">
-                            {item.count}
-                            <span className="text-medium-emphasis small">
-                              ({percent.toFixed(2)}%)
+                      item.gender !== '' && (
+                        <div className="progress-group" key={index}>
+                          <div className="progress-group-header">
+                            <span>{item.gender}</span>
+                            <span className="ms-auto fw-semibold">
+                              {item.count}
+                              <span className="text-medium-emphasis small">
+                                ({percent.toFixed(2)}%)
+                              </span>
                             </span>
-                          </span>
+                          </div>
+                          <div className="progress-group-bars">
+                            <CProgress thin color="warning" value={percent} />
+                          </div>
                         </div>
-                        <div className="progress-group-bars">
-                          <CProgress thin color="warning" value={percent} />
-                        </div>
-                      </div>
+                      )
                     )
                   })}
                 </CCol>

@@ -102,7 +102,7 @@ const Company = () => {
         <input
           type="text"
           className="form-control w-1/3"
-          placeholder="Search Company"
+          placeholder="Хайх..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -139,7 +139,6 @@ const Company = () => {
             if (!assessments) {
               return null
             }
-            console.log('assessments.AllPlayerCount', assessments[0].AllPlayerCount)
             return (
               <CTableRow key={item.id}>
                 <CTableDataCell>

@@ -62,18 +62,42 @@ export const COMPANY_QUERY = gql`
 `
 
 export const COMPANY_DETAIL_QUERY = gql`
-  query CompanyDetail($companyId: ID!) {
-    CompanyDetail(id: $companyId) {
+  query GetCompanyDetail($id: ID!) {
+    CompanyDetail(id: $id) {
       id
-      CompanyName
-      Players {
+      companyName
+      createdDate
+      players {
         id
-        createdDate
+        name
+        lastModifiedDate
         lastName
-        Name
         majorLevel
         completed
       }
+    }
+  }
+`
+
+export const GET_PLAYER_COUNT = gql`
+  query {
+    GetPlayerCount
+  }
+`
+
+export const GET_PLAYER_STATS = gql`
+  query {
+    completedPlayerCount
+    nullPlayerCount
+    invitedPlayerCount
+  }
+`
+export const GET_ALL_PLAYER_INFO = gql`
+  query {
+    GetPlayerInfo {
+      player_name
+      player_email
+      company_name
     }
   }
 `
