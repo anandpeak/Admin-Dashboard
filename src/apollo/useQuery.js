@@ -19,6 +19,7 @@ export const GET_ASSESSMENT_DATA = gql`
         nullCount
         completedCount
         appliedCount
+        startedCount
         totalPlayerCount
       }
     }
@@ -71,7 +72,7 @@ export const COMPANY_DETAIL_QUERY = gql`
         id
         name
         lastModifiedDate
-        lastName
+        email
         majorLevel
         completed
       }
@@ -88,7 +89,9 @@ export const GET_PLAYER_COUNT = gql`
 export const GET_PLAYER_STATS = gql`
   query {
     completedPlayerCount
-    nullPlayerCount
+    companyCount
+    startedPlayerCount
+    AppliedPlayerCount
     invitedPlayerCount
   }
 `
@@ -98,6 +101,60 @@ export const GET_ALL_PLAYER_INFO = gql`
       player_name
       player_email
       company_name
+      complete_type
+      last_modified_date
+      created_date
+    }
+  }
+`
+
+export const GET_COMPLETED_PLAYER_INFO = gql`
+  query {
+    GetCompletedPlayerInfo {
+      player_name
+      player_email
+      company_name
+      complete_type
+      last_modified_date
+      created_date
+    }
+  }
+`
+export const GET_INVITED_PLAYER_INFO = gql`
+  query {
+    GetInvitedPlayerInfo {
+      player_name
+      player_email
+      company_name
+      complete_type
+      last_modified_date
+      created_date
+    }
+  }
+`
+
+export const GET_APPLIED_PLAYER_INFO = gql`
+  query {
+    GetAppliedPlayerInfo {
+      player_name
+      player_email
+      company_name
+      complete_type
+      last_modified_date
+      created_date
+    }
+  }
+`
+
+export const GET_STARTED_PLAYER_INFO = gql`
+  query {
+    GetStartedPlayerInfo {
+      player_name
+      player_email
+      company_name
+      complete_type
+      last_modified_date
+      created_date
     }
   }
 `

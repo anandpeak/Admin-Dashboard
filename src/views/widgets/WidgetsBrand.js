@@ -39,7 +39,7 @@ const WidgetsBrand = () => {
       {companys.map((item) => {
         return (
           // eslint-disable-next-line prettier/prettier
-          <CCol className='d-flex justify-content-center' key={item.index} sm={6} lg={3}>
+          <CCol className="d-flex justify-content-center" key={item.index} sm={6} lg={3}>
             <CCard className="mb-2" style={{ width: '17rem' }}>
               <div className="d-flex justify-content-center text-xl align-items-center">
                 <CCardText>{item.name}</CCardText>

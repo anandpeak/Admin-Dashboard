@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client'
 import { AsssesmentChart } from '../charts/AssessmentChart'
 import { GENDER_AND_MAJOR_LEVELS_QUERY } from '../../apollo/useQuery'
 import { HashLoader } from 'react-spinners'
+import WidgetsBrand from '../widgets/WidgetsBrand'
 
 const Dashboard = () => {
   const { loading, error, data } = useQuery(GENDER_AND_MAJOR_LEVELS_QUERY)
@@ -39,7 +40,7 @@ const Dashboard = () => {
           <AsssesmentChart />
         </CCardBody>
       </CCard>
-      {/* <WidgetsBrand withCharts /> */}
+      <WidgetsBrand withCharts />
       <CRow>
         <CCol xs>
           <CCard className="mb-4">

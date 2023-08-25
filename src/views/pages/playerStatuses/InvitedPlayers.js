@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { CCard, CCardBody, CCardHeader } from '@coreui/react'
-import { GET_ALL_PLAYER_INFO } from 'src/apollo/useQuery'
+import { GET_INVITED_PLAYER_INFO } from 'src/apollo/useQuery'
 import { useQuery } from '@apollo/client'
 import { HashLoader } from 'react-spinners'
 
-const AllPlayers = () => {
-  const { data, loading, error } = useQuery(GET_ALL_PLAYER_INFO)
+const InvitedPlayers = () => {
+  const { data, loading, error } = useQuery(GET_INVITED_PLAYER_INFO)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOrder, setSortOrder] = useState('desc')
@@ -15,7 +15,7 @@ const AllPlayers = () => {
 
   useEffect(() => {
     if (data) {
-      const allPlayerInfo = data.GetPlayerInfo
+      const allPlayerInfo = data.GetInvitedPlayerInfo
       let filtered = allPlayerInfo.filter(
         (player) =>
           player.player_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -75,7 +75,7 @@ const AllPlayers = () => {
   return (
     <div>
       <CCard>
-        <CCardHeader>Нийт тоголсон хүмүүсийн хүснэгт</CCardHeader>
+        <CCardHeader>Нийт уригдсан хүмүүсийн хүснэгт</CCardHeader>
         <CCardBody>
           <div className="mb-4">
             <input
@@ -93,7 +93,6 @@ const AllPlayers = () => {
                   <th scope="col">Нэр</th>
                   <th scope="col">И-мейл</th>
                   <th scope="col">Компани</th>
-                  <th scope="col">Төлөв</th>
                   <th scope="col">
                     <button className="text-left" onClick={() => handleSort('date')}>
                       Урьсан Өдөр {renderSortIcon('date')}
@@ -112,7 +111,6 @@ const AllPlayers = () => {
                     <td>{player.player_name || 'N/A'}</td>
                     <td>{player.player_email || 'N/A'}</td>
                     <td>{player.company_name || 'N/A'}</td>
-                    <td>{player.complete_type || 'N/A'}</td>
                     <td>{player.created_date || 'N/A'}</td>
                     <td>{player.last_modified_date || 'N/A'}</td>
                   </tr>
@@ -157,4 +155,4 @@ const AllPlayers = () => {
   )
 }
 
-export default AllPlayers
+export default InvitedPlayers

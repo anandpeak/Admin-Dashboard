@@ -23,7 +23,7 @@ export const AsssesmentChart = () => {
 
       const datasets = [
         {
-          label: 'Урьсан',
+          label: 'Тоглоогүй байгаа',
           backgroundColor: 'rgba(151, 187, 205, 0.2)',
           borderColor: '#31b1fe',
           pointBackgroundColor: '#31b1fe',
@@ -55,7 +55,15 @@ export const AsssesmentChart = () => {
           data: dailyData.map((item) => item.appliedCount),
         },
         {
-          label: 'Нийт тоголсон хүмүүс',
+          label: 'Дуусгаагүй хүмүүс',
+          backgroundColor: 'rgba(151, 187, 205, 0.2)',
+          borderColor: '#027d7a',
+          pointBackgroundColor: '#027d7a',
+          pointBorderColor: '#fff',
+          data: dailyData.map((item) => item.startedCount),
+        },
+        {
+          label: 'Нийт уригдсан хүмүүс',
           backgroundColor: 'rgba(151, 187, 205, 0.2)',
           borderColor: '#893ffc',
           pointBackgroundColor: '#893ffc',
