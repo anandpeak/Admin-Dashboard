@@ -48,6 +48,7 @@ export const COMPANY_QUERY = gql`
       name
       assessments {
         id
+        AssessmentCount
         InvitedCount
         CompletedCount
         StartedCount
@@ -155,6 +156,15 @@ export const GET_STARTED_PLAYER_INFO = gql`
       complete_type
       last_modified_date
       created_date
+    }
+  }
+`
+
+export const LAST_CREATED_COMPANYS = gql`
+  query {
+    LastCreatedCompanys {
+      ID
+      name
     }
   }
 `

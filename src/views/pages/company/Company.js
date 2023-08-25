@@ -41,8 +41,8 @@ const Company = () => {
   const filteredCompanies = nonNullCompanies.filter((company) =>
     company.name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
-  const [sortKey, setSortKey] = useState('')
-  const [sortDirection, setSortDirection] = useState('asc')
+  const [sortKey, setSortKey] = useState('AssessmentCount') // Set default sort key
+  const [sortDirection, setSortDirection] = useState('desc')
 
   const toggleSortDirection = () => {
     setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
@@ -63,30 +63,46 @@ const Company = () => {
   const sortedCompanies = filteredCompanies.slice().sort((a, b) => {
     if (sortKey === 'name') {
       return sortDirection === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    } else if (sortKey === 'AssessmentCount') {
+      return sortDirection === 'asc'
+        ? a.assessments['0'].AssessmentCount - b.assessments['0'].AssessmentCount
+        : b.assessments['0'].AssessmentCount - a.assessments['0'].AssessmentCount
     } else if (sortKey === 'AllPlayerCount') {
       return sortDirection === 'asc'
-        ? a.assessments[0].AllPlayerCount - b.assessments[0].AllPlayerCount
-        : b.assessments[0].AllPlayerCount - a.assessments[0].AllPlayerCount
+        ? a.assessments['0'].AllPlayerCount - b.assessments['0'].AllPlayerCount
+        : b.assessments['0'].AllPlayerCount - a.assessments['0'].AllPlayerCount
     } else if (sortKey === 'CompletedCount') {
       return sortDirection === 'asc'
-        ? a.assessments[0].CompletedCount - b.assessments[0].CompletedCount
-        : b.assessments[0].CompletedCount - a.assessments[0].CompletedCount
+        ? a.assessments['0'].CompletedCount - b.assessments['0'].CompletedCount
+        : b.assessments['0'].CompletedCount - a.assessments['0'].CompletedCount
     } else if (sortKey === 'InvitedCount') {
       return sortDirection === 'asc'
-        ? a.assessments[0].InvitedCount - b.assessments[0].InvitedCount
-        : b.assessments[0].InvitedCount - a.assessments[0].InvitedCount
+        ? a.assessments['0'].InvitedCount - b.assessments['0'].InvitedCount
+        : b.assessments['0'].InvitedCount - a.assessments['0'].InvitedCount
     } else if (sortKey === 'AppliedCount') {
       return sortDirection === 'asc'
-        ? a.assessments[0].AppliedCount - b.assessments[0].AppliedCount
-        : b.assessments[0].AppliedCount - a.assessments[0].AppliedCount
+        ? a.assessments['0'].AppliedCount - b.assessments['0'].AppliedCount
+        : b.assessments['0'].AppliedCount - a.assessments['0'].AppliedCount
     } else if (sortKey === 'StartedCount') {
       return sortDirection === 'asc'
-        ? a.assessments[0].StartedCount - b.assessments[0].StartedCount
-        : b.assessments[0].StartedCount - a.assessments[0].StartedCount
+        ? a.assessments['0'].StartedCount - b.assessments['0'].StartedCount
+        : b.assessments['0'].StartedCount - a.assessments['0'].StartedCount
     } else if (sortKey === 'createdDate') {
-      const dateA = new Date(a.assessments[0].players[0].createdDate)
-      const dateB = new Date(b.assessments[0].players[0].createdDate)
-      return sortDirection === 'asc' ? dateA - dateB : dateB - dateA
+      // Sorting logic for createdDate
+      const dateA = a.assessments?.[0]?.players?.[0]?.createdDate
+      const dateB = b.assessments?.[0]?.players?.[0]?.createdDate
+
+      if (dateA && dateB) {
+        const parsedDateA = new Date(dateA)
+        const parsedDateB = new Date(dateB)
+        return sortDirection === 'asc' ? parsedDateA - parsedDateB : parsedDateB - parsedDateA
+      } else if (dateA) {
+        return sortDirection === 'asc' ? -1 : 1
+      } else if (dateB) {
+        return sortDirection === 'asc' ? 1 : -1
+      } else {
+        return 0
+      }
     }
   })
 
@@ -104,7 +120,10 @@ const Company = () => {
           className="form-control w-1/3"
           placeholder="Хайх..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setCurrentPage(1)
+            setSearchQuery(e.target.value)
+          }}
         />
       </div>
       <CTable align="middle" className="mb-0 border" hover responsive>
@@ -112,6 +131,9 @@ const Company = () => {
           <CTableRow>
             <CTableHeaderCell onClick={() => handleSort('name')}>
               Ашиглаж буй Компани {renderSortIcon('name')}
+            </CTableHeaderCell>
+            <CTableHeaderCell onClick={() => handleSort('AssessmentCount')}>
+              Ажлын байр {renderSortIcon('AssessmentCount')}
             </CTableHeaderCell>
             <CTableHeaderCell onClick={() => handleSort('AllPlayerCount')}>
               Нийт хэрэглэгч {renderSortIcon('AllPlayerCount')}
@@ -139,29 +161,44 @@ const Company = () => {
             if (!assessments) {
               return null
             }
+            const assessment = assessments[0]
+
+            if (!assessment) {
+              return null
+            }
+
             return (
               <CTableRow key={item.id}>
                 <CTableDataCell>
                   <Link to={`/company/${item.id}`}>{item.name}</Link>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessments[0].AllPlayerCount}</strong>
+                  <strong>{assessment ? assessment.AssessmentCount : 'N/A'}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessments[0].CompletedCount}</strong>
+                  <strong>{assessment ? assessment.AllPlayerCount : 'N/A'}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessments[0].InvitedCount}</strong>
+                  <strong>{assessment ? assessment.CompletedCount : 'N/A'}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessments[0].AppliedCount}</strong>
+                  <strong>{assessment ? assessment.InvitedCount : 'N/A'}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessments[0].StartedCount}</strong>
+                  <strong>{assessment ? assessment.AppliedCount : 'N/A'}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessments[0].players[0].createdDate}</strong>
+                  <strong>{assessment ? assessment.StartedCount : 'N/A'}</strong>
                 </CTableDataCell>
+                {assessment && assessment.players && assessment.players.length > 0 ? (
+                  <CTableDataCell>
+                    <strong>{assessment.players[0].createdDate}</strong>
+                  </CTableDataCell>
+                ) : (
+                  <CTableDataCell>
+                    <strong>N/A</strong>
+                  </CTableDataCell>
+                )}
               </CTableRow>
             )
           })}

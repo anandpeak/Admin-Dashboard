@@ -5,7 +5,6 @@ import { useQuery } from '@apollo/client'
 import { COMPANY_DETAIL_QUERY } from 'src/apollo/useQuery'
 import { HashLoader } from 'react-spinners'
 import { CCard, CCardBody, CCardHeader } from '@coreui/react'
-import { faSort } from '@fortawesome/free-solid-svg-icons' // Import the sorting icon
 
 const CompanyDetail = () => {
   const { id } = useParams()
@@ -13,7 +12,7 @@ const CompanyDetail = () => {
   const [sortOrder, setSortOrder] = useState('desc')
   const [currentPage, setCurrentPage] = useState(1)
   const [sortedColumn, setSortedColumn] = useState('date')
-  const itemsPerPage = 10
+  const ITEMS_PER_PAGE = 10
 
   const { loading, error, data } = useQuery(COMPANY_DETAIL_QUERY, {
     variables: { id: id },
@@ -31,10 +30,9 @@ const CompanyDetail = () => {
   const company = data.CompanyDetail
 
   // Pagination
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const totalPages = Math.ceil(company.players.length / itemsPerPage)
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1)
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
 
   // Filter
   const filteredPlayers = company.players.filter(
@@ -43,8 +41,14 @@ const CompanyDetail = () => {
       player.lastName.toLowerCase().includes(filter.toLowerCase()) ||
       player.majorLevel.toLowerCase().includes(filter.toLowerCase()),
   )
+  const totalPages = Math.ceil(filteredPlayers.length / ITEMS_PER_PAGE)
 
-  //Sort
+  const visiblePageNumbers = []
+  for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+    visiblePageNumbers.push(i)
+  }
+
+  // Sort
   const sortItems = (items, column, order) => {
     return [...items].sort((a, b) => {
       const dateA = a.lastModifiedDate ? new Date(a.lastModifiedDate) : new Date(0)
@@ -94,7 +98,7 @@ const CompanyDetail = () => {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Firstname</th>
-                  <th scope="col">Lastname</th>
+                  <th scope="col">email</th>
                   <th scope="col">Profession</th>
                   <th scope="col">Result</th>
                   <th
@@ -119,7 +123,7 @@ const CompanyDetail = () => {
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
                       <td>{player.name || 'N/A'}</td>
-                      <td>{player.lastName || 'N/A'}</td>
+                      <td>{player.email || 'N/A'}</td>
                       <td>{player.majorLevel || 'N/A'}</td>
                       <td>{player.completed}</td>
                       <td>
@@ -131,20 +135,37 @@ const CompanyDetail = () => {
               </tbody>
             </table>
           </div>
-          <nav className="mt-3 d-flex justify-content-center">
-            <ul className="pagination">
-              {pageNumbers.map((pageNumber) => (
-                <li
-                  key={pageNumber}
-                  className={`page-item${currentPage === pageNumber ? ' active' : ''}`}
-                >
-                  <button className="page-link" onClick={() => paginate(pageNumber)}>
-                    {pageNumber}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div className="flex justify-center mt-4">
+            {currentPage > 3 && (
+              <button
+                className="px-3 py-1 rounded border bg-white text-gray-700 mx-1 hover:bg-red-500 hover:text-[#ff0000]"
+                onClick={() => setCurrentPage(1)}
+              >
+                1
+              </button>
+            )}
+            {currentPage > 4 && <span className="mx-1">...</span>}
+            {visiblePageNumbers.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                className={`px-3 py-1 rounded border ${
+                  currentPage === pageNumber ? 'bg-red-500 text-white' : 'bg-white text-gray-700'
+                } mx-1 hover:bg-red-500 hover:text-[#ff0000]`}
+                onClick={() => setCurrentPage(pageNumber)}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            {currentPage < totalPages - 3 && <span className="mx-1">...</span>}
+            {currentPage < totalPages - 2 && (
+              <button
+                className="px-3 py-1 rounded border bg-white text-gray-700 mx-1 hover:bg-red-500 hover:text-[#ff0000]"
+                onClick={() => setCurrentPage(totalPages)}
+              >
+                {totalPages}
+              </button>
+            )}
+          </div>
         </CCardBody>
       </CCard>
     </div>

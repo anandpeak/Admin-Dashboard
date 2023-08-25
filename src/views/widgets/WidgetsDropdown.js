@@ -10,7 +10,6 @@ const WidgetsDropdown = () => {
   const { loading: statsLoading, error: statsError, data: statsData } = useQuery(GET_PLAYER_STATS)
   if (loading || statsLoading) return <p>Loading...</p>
   if (error || statsError) return <p>Error: {error?.message || statsError?.message}</p>
-  console.log(statsData)
   const playerCount = data.GetPlayerCount
   const appliedPlayerCount = statsData.AppliedPlayerCount
   const completedPlayerCount = statsData.completedPlayerCount
