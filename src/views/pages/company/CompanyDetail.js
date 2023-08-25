@@ -122,12 +122,12 @@ const CompanyDetail = () => {
                   return (
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
-                      <td>{player.name || 'N/A'}</td>
-                      <td>{player.email || 'N/A'}</td>
-                      <td>{player.majorLevel || 'N/A'}</td>
+                      <td>{player.name || ' '}</td>
+                      <td>{player.email || ' '}</td>
+                      <td>{player.majorLevel || ' '}</td>
                       <td>{player.completed}</td>
                       <td>
-                        {lastModifiedDate ? format(lastModifiedDate, 'yyyy.MM.dd') : 'N/A'}
+                        {lastModifiedDate ? format(lastModifiedDate, 'yyyy.MM.dd') : ' '}
                       </td>{' '}
                     </tr>
                   )

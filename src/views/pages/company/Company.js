@@ -173,22 +173,22 @@ const Company = () => {
                   <Link to={`/company/${item.id}`}>{item.name}</Link>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessment ? assessment.AssessmentCount : 'N/A'}</strong>
+                  <strong>{assessment ? assessment.AssessmentCount : ' '}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessment ? assessment.AllPlayerCount : 'N/A'}</strong>
+                  <strong>{assessment ? assessment.AllPlayerCount : ' '}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessment ? assessment.CompletedCount : 'N/A'}</strong>
+                  <strong>{assessment ? assessment.CompletedCount : ' '}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessment ? assessment.InvitedCount : 'N/A'}</strong>
+                  <strong>{assessment ? assessment.InvitedCount : ' '}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessment ? assessment.AppliedCount : 'N/A'}</strong>
+                  <strong>{assessment ? assessment.AppliedCount : ' '}</strong>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <strong>{assessment ? assessment.StartedCount : 'N/A'}</strong>
+                  <strong>{assessment ? assessment.StartedCount : ' '}</strong>
                 </CTableDataCell>
                 {assessment && assessment.players && assessment.players.length > 0 ? (
                   <CTableDataCell>
@@ -196,7 +196,7 @@ const Company = () => {
                   </CTableDataCell>
                 ) : (
                   <CTableDataCell>
-                    <strong>N/A</strong>
+                    <strong> </strong>
                   </CTableDataCell>
                 )}
               </CTableRow>

@@ -8,7 +8,7 @@ const InvitedPlayers = React.lazy(() => import('./views/pages/playerStatuses/Inv
 const AppliedPlayers = React.lazy(() => import('./views/pages/playerStatuses/AppliedPlayers'))
 const StartedPlayers = React.lazy(() => import('./views/pages/playerStatuses/StartedPlayers'))
 // Base
-// const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
+// const Accordion = React.lazy(() => import('./views/base/accordio ccordion'))
 // const Breadcrumbs = React.lazy(() => import('./views/base/breadcrumbs/Breadcrumbs'))
 
 const routes = [

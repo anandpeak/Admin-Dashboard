@@ -109,12 +109,12 @@ const AllPlayers = () => {
               <tbody>
                 {visiblePlayers.map((player, index) => (
                   <tr key={startIndex + index}>
-                    <td>{player.player_name || 'N/A'}</td>
-                    <td>{player.player_email || 'N/A'}</td>
-                    <td>{player.company_name || 'N/A'}</td>
-                    <td>{player.complete_type || 'N/A'}</td>
-                    <td>{player.created_date || 'N/A'}</td>
-                    <td>{player.last_modified_date || 'N/A'}</td>
+                    <td>{player.player_name || ' '}</td>
+                    <td>{player.player_email || ' '}</td>
+                    <td>{player.company_name || ' '}</td>
+                    <td>{player.complete_type || ' '}</td>
+                    <td>{player.created_date || ' '}</td>
+                    <td>{player.last_modified_date || ' '}</td>
                   </tr>
                 ))}
               </tbody>
